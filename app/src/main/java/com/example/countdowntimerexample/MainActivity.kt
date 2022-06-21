@@ -2,20 +2,24 @@ package com.example.countdowntimerexample
 
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import android.os.Looper
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
 
-    private val handler = Handler()
+    private lateinit var countdownText: TextView
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        countdownText = findViewById(R.id.countdown_text)
 
         // Update TextView every second
         handler.post(object : Runnable {
@@ -33,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set Event Date
         val eventDate = Calendar.getInstance()
-        eventDate[Calendar.YEAR] = 2021
+        eventDate[Calendar.YEAR] = 2023
         eventDate[Calendar.MONTH] = 0 // 0-11 so 1 less
         eventDate[Calendar.DAY_OF_MONTH] = 1
         eventDate[Calendar.HOUR] = 0
@@ -54,15 +58,15 @@ class MainActivity : AppCompatActivity() {
 
 
         // Display Countdown
-        countdown_text.text = "${days}d ${hours}h ${minutes}m ${seconds}s"
+        countdownText.text = "${days}d ${hours}h ${minutes}m ${seconds}s"
 
         // Show different text when the event has passed
         endEvent(currentDate, eventDate)
     }
 
-    private fun endEvent(currentdate: Calendar, eventdate: Calendar) {
-        if (currentdate.time >= eventdate.time) {
-            countdown_text.text = "Happy New Year!"
+    private fun endEvent(currentDate: Calendar, eventDate: Calendar) {
+        if (currentDate.time >= eventDate.time) {
+            countdownText.text = "Happy New Year!"
             //Stop Handler
             handler.removeMessages(0)
         }
